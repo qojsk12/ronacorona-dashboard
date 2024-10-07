@@ -1,6 +1,9 @@
 from dash import Dash, html, dcc
 import plotly.express as px
 import pandas as pd
+from data import countries_df
+from builders import make_table
+
 
 stylesheets = [
     "https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css",
@@ -19,7 +22,18 @@ app.layout = html.Div(
     children=[
         html.Header(
             style={'textAlign': 'center', 'paddingTop': '50px'},
-            children=[html.H1("Corona Dashboard", style={'fontSize': '40px'})])
+            children=[html.H1("Corona Dashboard", style={'fontSize': '40px'})]
+        ),
+        html.Div(
+            children=[
+                html.Div(
+                    children=[
+                        make_table(countries_df)
+                    ]
+                )
+            ]
+        )
+
     ],
 )
 

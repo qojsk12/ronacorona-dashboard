@@ -2,20 +2,25 @@ import pandas as pd
 
 conditions = ["confirmed", "deaths", "recovered"]
 
-daily_df = pd.read_csv(r'G:\내 드라이브\노마드코더\ronacorona-dashboard\data\daily_report.csv')
+daily_df = pd.read_csv(
+    r'G:\내 드라이브\노마드코더\ronacorona-dashboard\data\daily_report.csv')
 
-totals_df = daily_df[["Confirmed","Deaths","Recovered"]].sum().reset_index(name = "count")
-totals_df = totals_df.rename(columns = {'index': "condition"})
+totals_df = daily_df[["Confirmed", "Deaths", "Recovered"]
+                     ].sum().reset_index(name="count")
+totals_df = totals_df.rename(columns={'index': "condition"})
 
-countries_df = daily_df[["Country_Region","Confirmed","Deaths","Recovered"]]
-countries_df = daily_df.groupby("Country_Region").sum().reset_index()
+countries_df = daily_df[["Country_Region", "Confirmed", "Deaths", "Recovered"]]
+countries_df = countries_df.groupby("Country_Region").sum().reset_index()
+
 
 def make_country_df(country):
     def make_df(condition):
-        df = pd.read_csv(r"G:\\내 드라이브\\노마드코더\\ronacorona-dashboard\\data\\time_confirmed.csv")
+        df = pd.read_csv(
+            r"G:\\내 드라이브\\노마드코더\\ronacorona-dashboard\\data\\time_confirmed.csv")
         df = df.loc[df["Country/Region"] == country]
-        df = df.drop(columns = ["Province/State", "Country/Region", "Lat", "Long"]).sum().reset_index(name = condition)
-        df = df.rename(columns={'index':'date'})
+        df = df.drop(columns=["Province/State", "Country/Region",
+                     "Lat", "Long"]).sum().reset_index(name=condition)
+        df = df.rename(columns={'index': 'date'})
         return df
     final_df = None
     for condition in conditions:
@@ -26,13 +31,16 @@ def make_country_df(country):
             final_df = final_df.merge(condition_df)
     return final_df
 
+
 def make_global_df():
     def make_df(condition):
-        df = pd.read_csv(f'G:\\내 드라이브\\노마드코더\\ronacorona-dashboard\\data\\time_{condition}.csv')
-        df = df.drop(["Province/State","Country/Region","Lat","Long"], axis = 1).sum().reset_index(name=condition)
-        df = df.rename(columns = {'index' : 'date'})
+        df = pd.read_csv(
+            f'G:\\내 드라이브\\노마드코더\\ronacorona-dashboard\\data\\time_{condition}.csv')
+        df = df.drop(["Province/State", "Country/Region", "Lat",
+                     "Long"], axis=1).sum().reset_index(name=condition)
+        df = df.rename(columns={'index': 'date'})
         return df
-    
+
     final_df = None
     for condition in conditions:
         condition_df = make_df(condition)
@@ -41,6 +49,7 @@ def make_global_df():
         else:
             final_df = final_df.merge(condition_df)
     return final_df
-    
+
+
 global_df = make_global_df()
 global_df
